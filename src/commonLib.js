@@ -1,4 +1,4 @@
-export const appVersion = '2.1.0';
+export const appVersion = '2.1.1';
 export const appBaseURI = 'https://www.enc.jp/visualRecog';
 
 export function dateToTime14(dt) {

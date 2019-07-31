@@ -1,4 +1,5 @@
 import {appBaseURI} from './commonLib';
+import FileControl from './FileControl';
 
 const recognizeFacesURI = appBaseURI + '/recognize/faces.php';
 
@@ -21,7 +22,18 @@ export default class VisualRecognition {
           console.log("API呼び出し回数オーバーです。");
           return reject("API呼び出し回数オーバーです。しばらく経ってからアクセスしてください。");
         } else if(res.status == "OK") {
-          return resolve(JSON.stringify(res.data));
+          if(res.apiCount) {
+            // サーバー側v2.0.2以降
+            // API実行回数を記憶
+            cfg.apiCountRecognizeFaces = res.apiCount;
+            new Promise(function(resolve, reject) {
+              FileControl.saveConfig(resolve, reject, cfg);
+            }).then(function() {
+              return resolve(JSON.stringify(res.data));
+            });
+          } else {
+            return resolve(JSON.stringify(res.data));
+          }
         } else {
           console.log("AIサーバーとの通信に失敗しました: " + JSON.stringify(res.messages));
           return reject("AIサーバーとの通信に失敗しました");
