@@ -32,6 +32,7 @@ export default class SelectPhotoPage extends AbstractPage {
 
   onSuccessSelectPhoto(imageUri) {
     this.openLoding();
+
     var promise = new Promise(FileControl.loadConfig),
         self = this;
     promise.then(function(cfg) {
@@ -75,6 +76,24 @@ export default class SelectPhotoPage extends AbstractPage {
     cordova.InAppBrowser.open("http://www.enc.jp/facerex/", "_blank", "location=yes");
   }
 
+  handleDisplayConfigData(e) {
+    e.preventDefault();
+    if(this.state.dspCfgTchCnt) {
+      this.setState({ dspCfgTchCnt: this.state.dspCfgTchCnt + 1 });
+    } else {
+      this.setState({ dspCfgTchCnt: 1 });
+    }
+    if(this.state.dspCfgTchCnt % 4 == 0) {
+      var promise = new Promise(FileControl.loadConfig),
+          self = this;
+      promise.then(function(cfg) {
+        self.openAlert(JSON.stringify(cfg, null, 4));
+      });
+    } else {
+      this.closeAlert();
+    }
+  }
+
   renderToolbar() {
     return (
       <Toolbar>
@@ -112,6 +131,8 @@ export default class SelectPhotoPage extends AbstractPage {
           </p>
         </div>
 
+        <Button style={{position: 'absolute', right: '0', bottom: '0', width: '30px', height: '30px', background: 'none', border: 'none'}} onClick={this.handleDisplayConfigData.bind(this)}>
+        </Button>
         <AlertDialog isOpen={this.state.isAlertOpen} cancelable>
           <div className="alert-dialog-content">
             {this.state.alertMessage}

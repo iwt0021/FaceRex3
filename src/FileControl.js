@@ -36,7 +36,7 @@ export default class FileControl {
     cfg.versionNum = appVersion;
 
     if(!cfg.createdAt) cfg.createdAt = nowStr;
-    cfg.updateAt = nowStr;
+    cfg.updatedAt = nowStr;
     return cfg;
   }
 
